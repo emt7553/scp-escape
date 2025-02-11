@@ -4,6 +4,8 @@ import { GameState } from './types';
 import { Save, RotateCcw, FastForward, Play, Pause } from 'lucide-react';
 
 function App() {
+  console.log('App component rendered');
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [gameEngine] = useState(() => new GameEngine(70, 59));
   const [gameState, setGameState] = useState<GameState>(gameEngine.getState());
@@ -49,17 +51,28 @@ function App() {
   };
 
   useEffect(() => {
+    console.log('useEffect hook executed');
+
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas) {
+      console.error('Canvas not found');
+      return;
+    }
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+    if (!ctx) {
+      console.error('Canvas context not found');
+      return;
+    }
+
+    console.log('Canvas and context initialized');
 
     const cellSize = 10;
     canvas.width = 700;
     canvas.height = 700;
 
     const render = () => {
+      console.log('Rendering frame');
       if (!gameEngine.shouldRenderFrame()) {
         // Only update status text when not rendering full graphics
         ctx.fillStyle = '#f0f0f0';
@@ -217,6 +230,7 @@ function App() {
     const frameInterval = 1000 / fps;
 
     const update = (currentTime: number) => {
+      console.log('Updating game state');
       if (isPaused) {
         animationFrameRef.current = requestAnimationFrame(update);
         return;
